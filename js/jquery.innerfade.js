@@ -61,7 +61,7 @@
             for (var i = 0; i < elements.length; i++) {
                 $(elements[i]).css('z-index', String(elements.length-i)).css('position', 'absolute').hide();
             };
-            if (settings.type == "sequence") {
+            if (settings.type == "sequence" || settings.type == "single_run") {
                 setTimeout(function() {
                     $.innerfade.next(elements, settings, 1, 0);
                 }, settings.timeout);
@@ -83,7 +83,7 @@
 								}, settings.timeout);
 								$(elements[current]).show();
 						}	else {
-							alert('Innerfade-Type must either be \'sequence\', \'random\' or \'random_start\'');
+							alert('Innerfade-Type must either be \'sequence\', \'random\' or \'random_start\' or \'single_run\' ');
 						}
 				}
     };
@@ -107,12 +107,20 @@
                 current = 0;
                 last = elements.length - 1;
             }
+        } else if (settings.type == "single_run") {
+            if ((current + 1) < elements.length) {
+                current = current + 1;
+                last = current - 1;
+            } else {
+                // single run stops after first run through
+                // so we do nothing when elements run out
+            }
         } else if (settings.type == "random") {
             last = current;
             while (current == last)
                 current = Math.floor(Math.random() * elements.length);
         } else
-            alert('Innerfade-Type must either be \'sequence\', \'random\' or \'random_start\'');
+            alert('Innerfade-Type must either be \'sequence\', \'random\' or \'random_start\' or \'single_run\' ');
         setTimeout((function() {
             $.innerfade.next(elements, settings, current, last);
         }), settings.timeout);
